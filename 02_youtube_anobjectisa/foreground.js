@@ -12,4 +12,9 @@ second.id = "second";
 document.querySelector('body').appendChild(first);
 document.querySelector('body').appendChild(second);
 
+first.addEventListener('click', () => {
+    chrome.storage.local.set({ "mykey": "mydata123" });
+    console.log("I SET DATA");
+});
+
 
