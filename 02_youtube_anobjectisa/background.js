@@ -7,8 +7,9 @@ function log2_frontend_console() {
 }
 
 chrome.tabs.onActivated.addListener(tab => {
+    console.log(tab);
     chrome.tabs.get(tab.tabId, current_tab_info => {
-        
+
         active_tab_id = tab.tabId;    
         
         if (/^https:\/\/www\.google/.test(current_tab_info.url)) {
@@ -16,11 +17,17 @@ chrome.tabs.onActivated.addListener(tab => {
             // chrome.tabs.insertCSS(null, { file: './mystyles.css' });
             // chrome.tabs.executeScript(null, { file: './foreground.js' }, () => console.log('i injected'))
             */
-           // rewritten to:
+            
+            // rewritten to:
+            chrome.scripting.insertCSS({
+                target: { tabId: active_tab_id },
+                files: ['./mystyles.css'] // it can be also: function: log2_frontend_console
+              }, () => console.log('CSS is injected')); // this log will appear in service console 
+
             chrome.scripting.executeScript({
                 target: { tabId: active_tab_id },
                 files: ['./foreground.js'] // it can be also: function: log2_frontend_console
-              }, () => console.log('is injected')); // this log will appear in service console 
+              }, () => console.log('foreground.js is injected')); // this log will appear in service console 
         }
     
     });
