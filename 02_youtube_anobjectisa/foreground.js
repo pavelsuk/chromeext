@@ -1,11 +1,25 @@
 console.log("foreground.js log")
-document.querySelector('.lnXdpd').classList.add('spinspinspin')
+// document.querySelector('.lnXdpd').classList.add('spinspinspin')
 
 if (!document.getElementById("first")) {
     injectButtons();
+} else {
+    updateButtons();
+}
+
+function readLoan(callback) {
+    loan = 0;
+    chrome.storage.local.get("loan", value => {
+        console.log(value);
+        console.log(value.loan);
+        loan = value.loan.toFixed();
+        callback(loan)
+    });
 }
 
 function injectButtons() {
+
+ 
     console.log("injectButtons")
 
     const first = document.createElement('button');
@@ -21,13 +35,21 @@ function injectButtons() {
     third.id = "third";
     
     const loandiv = document.createElement('div');
-    loandiv.innerText = "100";
+    const loanval = document.createElement('div');
+    readLoan( loandata => {
+        loanval.innerText = loandata;
+    });
+    loanval.id = "loanval"
+
+
     loandiv.id = "loandiv";
+    loandiv.insertBefore(third, loandiv.childNodes[0]);
+    loandiv.appendChild(loanval)
     
     
     document.querySelector('body').appendChild(first);
     document.querySelector('body').appendChild(second);
-    document.querySelector('body').appendChild(third);
+    // document.querySelector('body').appendChild(third);
     document.querySelector('body').appendChild(loandiv);
     
     first.addEventListener('click', () => {
@@ -45,19 +67,25 @@ function injectButtons() {
         chrome.runtime.sendMessage({message: 'loan'});
         console.log('LOAN')
     });
+
+
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        console.log(request.message);
+        if (request.message === 'loan returned with interest') {
+            readLoan( loandata => {
+                document.getElementById("loanval").innerText = loandata;
+            });
+    
+        }
+    });
+    
 }
 
-
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log(request.message);
-    if (request.message === 'loan returned with interest') {
-        loan = 0;
-        chrome.storage.local.get("loan", value => {
-            console.log(value);
-            console.log(value.loan);
-            loandiv.innerText = "Total: " + value.loan.toFixed()  
-        });
+function updateButtons() {
+    if (document.getElementById("loanval")) {
+        readLoan( loandata => {
+            document.getElementById("loanval").innerText = loandata;
+        });    
     }
-});
+}
 
