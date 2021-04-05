@@ -26,3 +26,10 @@
     left: 40%;
     background-color:mediumaquamarine;
 }
+
+#third {
+    position: absolute;
+    top: 20%;
+    left: 60%;
+    background-color:greenyellow;
+}
