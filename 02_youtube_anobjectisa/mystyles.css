@@ -17,10 +17,12 @@
     position: absolute;
     top: 20%;
     left: 20%;
+    background-color: chocolate;
 }
 
 #second {
     position: absolute;
     top: 20%;
     left: 40%;
+    background-color:mediumaquamarine;
 }
